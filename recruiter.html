@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recruiter Dashboard | CREDOZA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #2563EB;
+      --primary-hover: #1D4ED8;
+      --primary-light: #EFF6FF;
+      --bg-page: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --text-light: #94A3B8;
+      --border: #E2E8F0;
+      --success: #10B981;
+      --success-bg: #ECFDF5;
+      --error: #EF4444;
+      --error-bg: #FEF2F2;
+      --warning: #F59E0B;
+      --warning-bg: #FFFBEB;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --transition: all 0.2s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: var(--bg-card);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .user-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .btn-logout:hover {
+      border-color: var(--error);
+      color: var(--error);
+      background: var(--error-bg);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    main {
+      flex: 1;
+      padding: 32px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .page-title h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .page-title p {
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* ===== STATS ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-card h3 {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    /* ===== TABS ===== */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+
+    .tab-btn:hover {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== TABLES ===== */
+    .data-table-container {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table th {
+      background: var(--bg-page);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover {
+      background: var(--primary-light);
+    }
+
+    .badge {
+      padding: 6px 12px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge-pass {
+      background: var(--success-bg);
+      color: #065F46;
+    }
+
+    .badge-fail {
+      background: var(--error-bg);
+      color: #991B1B;
+    }
+
+    .action-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: var(--transition);
+      font-size: 1rem;
+    }
+
+    .action-btn:hover {
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .action-btn.delete:hover {
+      color: var(--error);
+      background: var(--error-bg);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--border);
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px;
+      position: relative;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 24px;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      transition: var(--transition);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-modal:hover {
+      background: var(--bg-page);
+      color: var(--text-main);
+    }
+
+    /* ===== FORM ===== */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--text-main);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-light);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
+
+    .form-input[type="number"]::-webkit-inner-spin-button,
+    .form-input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* ===== QUESTION BUILDER ===== */
+    .question-block {
+      background: var(--bg-page);
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .question-header span {
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    .option-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .option-row input[type="radio"] {
+      accent-color: var(--primary);
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .option-row .form-input {
+      flex: 1;
+    }
+
+    .add-btn {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1.5px dashed var(--primary);
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-top: 12px;
+      transition: var(--transition);
+    }
+
+    .add-btn:hover {
+      background: var(--primary);
+      color: white;
+      border-style: solid;
+    }
+
+    .modal-actions {
+      margin-top: 28px;
+      display: flex;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--text-main);
+      color: var(--text-main);
+      background: var(--bg-page);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .btn-primary {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .data-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+
+      .modal {
+        margin: 16px;
+        padding: 24px 20px;
+        max-height: calc(100vh - 32px);
+      }
+
+      .modal-actions {
+        flex-direction: column;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 12px 16px;
+      }
+
+      main {
+        padding: 24px 16px;
+      }
+
+      .page-title h1 {
+        font-size: 1.4rem;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+      }
+
+      .modal {
+        padding: 20px 16px;
+      }
+
+      .question-block {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Auth Guard -->
+  <script>
+    const session = JSON.parse(localStorage.getItem('credoza_session') || '{}');
+    if (!session.loggedIn || session.role !== 'recruiter') window.location.href = 'login.html';
+  </script>
+
+  <header>
+    <a href="index.html" class="logo">Credo<span>za</span></a>
+    <div class="user-nav">
+      <div class="user-info">
+        <div class="user-name" id="userName">Recruiter</div>
+        <div class="user-role">Recruiter</div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <div class="page-title">
+        <h1>Test Management</h1>
+        <p>Create, edit, and monitor your hiring assessments.</p>
+      </div>
+      <button class="btn-primary" onclick="openCreateModal()">+ Create New Test</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3>Total Tests</h3>
+        <div class="stat-value" id="statTotalTests">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Attempts</h3>
+        <div class="stat-value" id="statTotalAttempts">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Average Score</h3>
+        <div class="stat-value" id="statAvgScore">0%</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('tests')">My Tests</button>
+      <button class="tab-btn" onclick="switchTab('results')">Results & Analytics</button>
+    </div>
+
+    <!-- Tests List -->
+    <div id="tests-tab" class="tab-content active">
+      <div class="data-table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Test Title</th>
+              <th>Questions</th>
+              <th>Time Limit</th>
+              <th>Created</th>
+              <th style="text-align:right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="testsTableBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+      <p id="emptyTestsMsg" class="empty-state" style="display:none;">No tests created yet. Click "Create New Test" to
+        start.</p>
+    </div>
+
+    <!-- Results List -->
+    <div id="results-tab" class="tab-content">
+      <div class="data-table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Test Taken</th>
+              <th>Score</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="resultsTableBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+      <p id="emptyResultsMsg" class="empty-state" style="display:none;">No results available yet.</p>
+    </div>
+  </main>
+
+  <!-- Create/Edit Modal -->
+  <div class="modal-overlay" id="testModal">
+    <div class="modal">
+      <button class="close-modal" onclick="closeModal()">×</button>
+      <h2 id="modalTitle">Create New Test</h2>
+      <form id="testForm">
+        <div class="form-group">
+          <label for="testTitle">Test Title</label>
+          <input type="text" id="testTitle" class="form-input" required
+            placeholder="e.g. Senior React Developer Assessment">
+        </div>
+        <div class="form-group">
+          <label for="testTime">Time Limit (Minutes)</label>
+          <input type="number" id="testTime" class="form-input" required value="15" min="1">
+        </div>
+
+        <label
+          style="display:block; color:var(--text-main); margin:24px 0 12px; font-weight:600; font-size:0.95rem;">Questions</label>
+        <div id="questionsContainer"></div>
+        <button type="button" class="add-btn" onclick="addQuestionField()">+ Add Question</button>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary" style="flex:1">Save Test</button>
+          <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ===== DATA HELPERS =====
+    function getTests() { return JSON.parse(localStorage.getItem('credoza_tests') || '[]'); }
+    function saveTests(tests) { localStorage.setItem('credoza_tests', JSON.stringify(tests)); }
+    function getResults() { return JSON.parse(localStorage.getItem('credoza_results') || '[]'); }
+    function getUsers() { return JSON.parse(localStorage.getItem('credoza_users') || '[]'); }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('userName').textContent = session.name;
+      renderDashboard();
+    });
+
+    // ===== RENDER FUNCTIONS =====
+    function renderDashboard() {
+      const tests = getTests();
+      const results = getResults();
+
+      // Stats
+      document.getElementById('statTotalTests').textContent = tests.length;
+      document.getElementById('statTotalAttempts').textContent = results.length;
+
+      if (results.length > 0) {
+        const avg = results.reduce((sum, r) => sum + (r.score / r.totalQuestions * 100), 0) / results.length;
+        document.getElementById('statAvgScore').textContent = Math.round(avg) + '%';
+      }
+
+      // Render Tests Table
+      const testsBody = document.getElementById('testsTableBody');
+      testsBody.innerHTML = '';
+      if (tests.length === 0) {
+        document.getElementById('emptyTestsMsg').style.display = 'block';
+      } else {
+        document.getElementById('emptyTestsMsg').style.display = 'none';
+        tests.forEach((test, index) => {
+          testsBody.innerHTML += `
+            <tr>
+              <td style="font-weight:600; color:var(--text-main)">${test.title}</td>
+              <td>${test.questions.length} questions</td>
+              <td>${test.timeLimit} min</td>
+              <td style="color:var(--text-muted); font-size:0.9rem">${new Date(test.createdAt).toLocaleDateString()}</td>
+              <td style="text-align:right">
+                <button class="action-btn" onclick="editTest(${index})" title="Edit">✏️</button>
+                <button class="action-btn delete" onclick="deleteTest(${index})" title="Delete">🗑️</button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+
+      // Render Results Table
+      const resultsBody = document.getElementById('resultsTableBody');
+      resultsBody.innerHTML = '';
+      if (results.length === 0) {
+        document.getElementById('emptyResultsMsg').style.display = 'block';
+      } else {
+        document.getElementById('emptyResultsMsg').style.display = 'none';
+        const users = getUsers();
+        results.slice().reverse().forEach(res => {
+          const user = users.find(u => u.email === res.userEmail);
+          const userName = user ? user.name : 'Unknown Candidate';
+          const percentage = Math.round((res.score / res.totalQuestions) * 100);
+          const passed = percentage >= 60;
+
+          resultsBody.innerHTML += `
+            <tr>
+              <td style="font-weight:600; color:var(--text-main)">${userName}</td>
+              <td>${res.testTitle}</td>
+              <td><strong style="color:var(--primary)">${percentage}%</strong> <span style="color:var(--text-muted)">(${res.score}/${res.totalQuestions})</span></td>
+              <td><span class="badge ${passed ? 'badge-pass' : 'badge-fail'}">${passed ? 'Pass' : 'Fail'}</span></td>
+              <td style="color:var(--text-muted); font-size:0.9rem">${new Date(res.date).toLocaleDateString()}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    // ===== TABS =====
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById(tabName + '-tab').classList.add('active');
+    }
+
+    // ===== MODAL & FORM LOGIC =====
+    let editingIndex = -1;
+
+    function openCreateModal() {
+      editingIndex = -1;
+      document.getElementById('modalTitle').textContent = 'Create New Test';
+      document.getElementById('testForm').reset();
+      document.getElementById('questionsContainer').innerHTML = '';
+      addQuestionField();
+      document.getElementById('testModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('testModal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close modal on overlay click
+    document.getElementById('testModal').addEventListener('click', (e) => {
+      if (e.target.id === 'testModal') closeModal();
+    });
+
+    function addQuestionField(data = null) {
+      const container = document.getElementById('questionsContainer');
+      const qIndex = container.children.length;
+      const div = document.createElement('div');
+      div.className = 'question-block';
+      div.innerHTML = `
+        <div class="question-header">
+          <span>Question ${qIndex + 1}</span>
+          <button type="button" class="action-btn delete" onclick="this.closest('.question-block').remove()" style="font-size:0.85rem">Remove</button>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <input type="text" class="form-input q-text" placeholder="Enter question text..." required value="${data ? data.text : ''}">
+        </div>
+        <div class="options-group">
+          ${['A', 'B', 'C', 'D'].map((opt, i) => `
+            <div class="option-row">
+              <input type="radio" name="q${qIndex}_correct" value="${i}" required ${data && data.correct === i ? 'checked' : ''}>
+              <span style="font-weight:600; color:var(--text-muted); min-width:20px">${opt})</span>
+              <input type="text" class="form-input" placeholder="Option ${opt}" required value="${data ? data.options[i] : ''}">
+            </div>
+          `).join('')}
+        </div>
+      `;
+      container.appendChild(div);
+    }
+
+    document.getElementById('testForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById('testTitle').value;
+      const timeLimit = parseInt(document.getElementById('testTime').value);
+      const qBlocks = document.querySelectorAll('.question-block');
+
+      if (qBlocks.length === 0) { alert('Add at least one question!'); return; }
+
+      const questions = [];
+      let valid = true;
+
+      qBlocks.forEach((block, idx) => {
+        const text = block.querySelector('.q-text').value;
+        const options = Array.from(block.querySelectorAll('.options-group input[type="text"]')).map(i => i.value);
+        const correctInput = block.querySelector(`input[name="q${idx}_correct"]:checked`);
+        const correct = correctInput ? parseInt(correctInput.value) : -1;
+
+        if (!text.trim() || options.some(o => !o.trim()) || isNaN(correct)) { valid = false; }
+        questions.push({ text: text.trim(), options: options.map(o => o.trim()), correct });
+      });
+
+      if (!valid) { alert('Please fill all question fields and select a correct answer.'); return; }
+
+      const tests = getTests();
+      const newTest = { title, timeLimit, questions, createdAt: new Date().toISOString() };
+
+      if (editingIndex > -1) {
+        tests[editingIndex] = { ...tests[editingIndex], ...newTest };
+      } else {
+        tests.push(newTest);
+      }
+
+      saveTests(tests);
+      closeModal();
+      renderDashboard();
+    });
+
+    function editTest(index) {
+      editingIndex = index;
+      const test = getTests()[index];
+      document.getElementById('modalTitle').textContent = 'Edit Test';
+      document.getElementById('testTitle').value = test.title;
+      document.getElementById('testTime').value = test.timeLimit;
+
+      const container = document.getElementById('questionsContainer');
+      container.innerHTML = '';
+      test.questions.forEach(q => addQuestionField(q));
+
+      document.getElementById('testModal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function deleteTest(index) {
+      if (confirm('Delete this test? Associated candidate results will remain but the test details will be removed.')) {
+        const tests = getTests();
+        tests.splice(index, 1);
+        saveTests(tests);
+        renderDashboard();
+      }
+    }
+
+    // ===== LOGOUT =====
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('credoza_session');
+      window.location.href = 'login.html';
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+  </script>
+</body>
+
+</html>
