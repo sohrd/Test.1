@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Candidate Dashboard | CREDOZA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #2563EB;
+      --primary-hover: #1D4ED8;
+      --primary-light: #EFF6FF;
+      --bg-page: #F8FAFC;
+      --bg-card: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --text-light: #94A3B8;
+      --border: #E2E8F0;
+      --success: #10B981;
+      --success-bg: #ECFDF5;
+      --error: #EF4444;
+      --error-bg: #FEF2F2;
+      --warning: #F59E0B;
+      --warning-bg: #FFFBEB;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --transition: all 0.2s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: var(--bg-card);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text-main);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .user-nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .btn-logout:hover {
+      border-color: var(--error);
+      color: var(--error);
+      background: var(--error-bg);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    main {
+      flex: 1;
+      padding: 32px 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .page-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .page-header p {
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-size: 0.95rem;
+    }
+
+    /* ===== STATS ===== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-box {
+      background: var(--bg-card);
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      text-align: center;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .stat-box:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .stat-val {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    /* ===== SECTIONS ===== */
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 40px 0 16px;
+      padding-left: 12px;
+      border-left: 3px solid var(--primary);
+    }
+
+    /* ===== TEST CARDS ===== */
+    .test-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .test-card {
+      background: var(--bg-card);
+      padding: 20px 24px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .test-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .test-info h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .test-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .test-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-start {
+      background: var(--primary);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn-start:hover:not(:disabled) {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-start:disabled {
+      background: var(--text-light);
+      color: var(--bg-page);
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    /* ===== RESULTS ===== */
+    .result-item {
+      background: var(--bg-card);
+      padding: 16px 24px;
+      border-radius: var(--radius-lg);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .result-item:hover {
+      border-color: var(--primary);
+    }
+
+    .result-item h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .score-badge {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .status-pass {
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    .status-fail {
+      color: var(--error);
+      font-weight: 600;
+    }
+
+    .status-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px dashed var(--border);
+    }
+
+    /* ===== TEST OVERLAY ===== */
+    #testOverlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-page);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    #testOverlay.active {
+      display: flex;
+    }
+
+    .test-header {
+      background: var(--bg-card);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .test-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .timer-box {
+      background: var(--primary-light);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 700;
+      color: var(--primary);
+      font-family: ui-monospace, monospace;
+      font-size: 1.1rem;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    .timer-box.warning {
+      background: var(--error-bg);
+      color: var(--error);
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    .test-body {
+      max-width: 700px;
+      margin: 32px auto;
+      padding: 0 24px;
+      flex: 1;
+    }
+
+    .question-block {
+      margin-bottom: 32px;
+      padding: 24px;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .q-number {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .q-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .options-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--bg-page);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .option-label:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .option-label input {
+      margin-top: 3px;
+      accent-color: var(--primary);
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .option-label span {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    .option-label:has(input:checked) {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .option-label:has(input:checked) span {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .test-actions {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(to top, var(--bg-page) 70%, transparent);
+      padding: 20px 24px;
+      display: flex;
+      justify-content: flex-end;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-submit-test {
+      background: var(--primary);
+      color: white;
+      padding: 14px 40px;
+      border-radius: 50px;
+      border: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-submit-test:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* ===== RESULT OVERLAY ===== */
+    #resultOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--bg-page);
+      z-index: 200;
+      overflow-y: auto;
+    }
+
+    .result-card {
+      background: var(--bg-card);
+      padding: 48px 40px;
+      border-radius: var(--radius-lg);
+      text-align: center;
+      max-width: 480px;
+      margin: 80px auto;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .result-card h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .result-card p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .result-score {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--primary);
+      margin: 16px 0;
+      line-height: 1;
+    }
+
+    .result-msg {
+      font-size: 1.05rem;
+      color: var(--text-main);
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+
+    .btn-back {
+      background: var(--primary);
+      color: white;
+      padding: 12px 32px;
+      border-radius: 50px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-back:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .stats-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .test-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .btn-start {
+        width: 100%;
+      }
+
+      .test-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .result-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        text-align: left;
+      }
+
+      .result-card {
+        margin: 40px 16px;
+        padding: 32px 24px;
+      }
+
+      .result-score {
+        font-size: 2.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 12px 16px;
+      }
+
+      main {
+        padding: 24px 16px;
+      }
+
+      .page-header h1 {
+        font-size: 1.4rem;
+      }
+
+      .stat-val {
+        font-size: 1.5rem;
+      }
+
+      .question-block {
+        padding: 20px 16px;
+      }
+
+      .q-text {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    const session = JSON.parse(localStorage.getItem('credoza_session') || '{}');
+    if (!session.loggedIn || session.role !== 'candidate') window.location.href = 'login.html';
+  </script>
+
+  <header>
+    <a href="index.html" class="logo">Credo<span>za</span></a>
+    <div class="user-nav">
+      <div class="user-info">
+        <div class="user-name" id="userName">Candidate</div>
+        <div class="user-role">Candidate</div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <main id="dashboardView">
+    <div class="page-header">
+      <h1>Welcome, <span id="welcomeName">Candidate</span> 👋</h1>
+      <p>Take your assessments and track your progress.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-val" id="statTaken">0</div>
+        <div class="stat-label">Tests Taken</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="statAvg">0%</div>
+        <div class="stat-label">Avg. Score</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="statPass">0</div>
+        <div class="stat-label">Passed</div>
+      </div>
+    </div>
+
+    <!-- Available Tests -->
+    <div class="section-title">Available Tests</div>
+    <div class="test-list" id="availableTestsList">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- Results History -->
+    <div class="section-title">Your Results</div>
+    <div id="resultsList">
+      <!-- Populated by JS -->
+    </div>
+    <p id="noResultsMsg" class="empty-state">No results yet. Start taking tests to see your progress!</p>
+  </main>
+
+  <!-- TEST TAKING OVERLAY -->
+  <div id="testOverlay">
+    <div class="test-header">
+      <h3 id="overlayTestTitle">Test Title</h3>
+      <div class="timer-box" id="timerDisplay">00:00</div>
+    </div>
+    <div class="test-body" id="questionsContainer">
+      <!-- Questions injected here -->
+    </div>
+    <div class="test-actions">
+      <button class="btn-submit-test" onclick="submitTest()">Submit Assessment</button>
+    </div>
+  </div>
+
+  <!-- RESULT DISPLAY OVERLAY -->
+  <div id="resultOverlay">
+    <div class="result-card">
+      <h2>Assessment Complete! 🎉</h2>
+      <p>Here's how you performed:</p>
+      <div class="result-score" id="finalScore">85%</div>
+      <div class="result-msg" id="finalMsg">Great job!</div>
+      <button class="btn-back" onclick="closeResultOverlay()">Back to Dashboard</button>
+    </div>
+  </div>
+
+  <script>
+    // ===== DATA HELPERS =====
+    function getTests() { return JSON.parse(localStorage.getItem('credoza_tests') || '[]'); }
+    function getResults() { return JSON.parse(localStorage.getItem('credoza_results') || '[]'); }
+    function saveResult(result) {
+      const r = getResults(); r.push(result); localStorage.setItem('credoza_results', JSON.stringify(r));
+    }
+
+    // ===== STATE =====
+    let currentTest = null;
+    let timerInterval = null;
+    let timeLeft = 0;
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('userName').textContent = session.name;
+      document.getElementById('welcomeName').textContent = session.name.split(' ')[0];
+      renderDashboard();
+    });
+
+    function renderDashboard() {
+      const tests = getTests();
+      const results = getResults().filter(r => r.userEmail === session.email);
+      const listContainer = document.getElementById('availableTestsList');
+      const resultsContainer = document.getElementById('resultsList');
+
+      listContainer.innerHTML = '';
+      resultsContainer.innerHTML = '';
+
+      // Stats
+      document.getElementById('statTaken').textContent = results.length;
+      if (results.length > 0) {
+        const avg = results.reduce((s, r) => s + (r.score / r.totalQuestions) * 100, 0) / results.length;
+        document.getElementById('statAvg').textContent = Math.round(avg) + '%';
+        document.getElementById('statPass').textContent = results.filter(r => (r.score / r.totalQuestions) * 100 >= 60).length;
+      }
+
+      // Available Tests
+      if (tests.length === 0) {
+        listContainer.innerHTML = '<p class="empty-state">No tests available right now. Check back soon!</p>';
+      } else {
+        tests.forEach(test => {
+          const taken = results.find(r => r.testTitle === test.title);
+          listContainer.innerHTML += `
+            <div class="test-card">
+              <div class="test-info">
+                <h3>${test.title}</h3>
+                <div class="test-meta">
+                  <span>⏱ ${test.timeLimit} min</span>
+                  <span>❓ ${test.questions.length} questions</span>
+                </div>
+              </div>
+              <button class="btn-start" onclick="startTest('${test.title}')" ${taken ? 'disabled' : ''}>
+                ${taken ? 'Completed ✓' : 'Start Test'}
+              </button>
+            </div>
+          `;
+        });
+      }
+
+      // Results
+      if (results.length === 0) {
+        document.getElementById('noResultsMsg').style.display = 'block';
+      } else {
+        document.getElementById('noResultsMsg').style.display = 'none';
+        results.slice().reverse().forEach(r => {
+          const pct = Math.round((r.score / r.totalQuestions) * 100);
+          const passed = pct >= 60;
+          resultsContainer.innerHTML += `
+            <div class="result-item">
+              <div>
+                <h4>${r.testTitle}</h4>
+                <span class="status-text">${new Date(r.date).toLocaleDateString()}</span>
+              </div>
+              <div style="text-align:right">
+                <div class="score-badge">${pct}%</div>
+                <span class="status-text ${passed ? 'status-pass' : 'status-fail'}">${passed ? 'Passed ✓' : 'Try Again'}</span>
+              </div>
+            </div>
+          `;
+        });
+      }
+    }
+
+    // ===== TEST LOGIC =====
+    function startTest(testTitle) {
+      const tests = getTests();
+      currentTest = tests.find(t => t.title === testTitle);
+      if (!currentTest) return;
+
+      document.getElementById('overlayTestTitle').textContent = currentTest.title;
+      document.getElementById('testOverlay').classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent background scroll
+
+      // Render Questions
+      const qContainer = document.getElementById('questionsContainer');
+      qContainer.innerHTML = '';
+      currentTest.questions.forEach((q, i) => {
+        qContainer.innerHTML += `
+          <div class="question-block">
+            <div class="q-number">Question ${i + 1} of ${currentTest.questions.length}</div>
+            <div class="q-text">${q.text}</div>
+            <div class="options-grid">
+              ${q.options.map((opt, idx) => `
+                <label class="option-label">
+                  <input type="radio" name="q${i}" value="${idx}">
+                  <span>${opt}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      });
+
+      // Start Timer
+      timeLeft = currentTest.timeLimit * 60;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          alert('Time is up! Submitting your answers.');
+          submitTest();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const m = Math.floor(timeLeft / 60);
+      const s = timeLeft % 60;
+      const display = document.getElementById('timerDisplay');
+      display.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      if (timeLeft < 60) display.classList.add('warning');
+      else display.classList.remove('warning');
+    }
+
+    function submitTest() {
+      clearInterval(timerInterval);
+
+      let score = 0;
+      const qBlocks = document.querySelectorAll('.question-block');
+
+      qBlocks.forEach((block, i) => {
+        const selected = block.querySelector('input[type="radio"]:checked');
+        if (selected && parseInt(selected.value) === currentTest.questions[i].correct) {
+          score++;
+        }
+      });
+
+      const result = {
+        userEmail: session.email,
+        testTitle: currentTest.title,
+        score: score,
+        totalQuestions: currentTest.questions.length,
+        date: new Date().toISOString()
+      };
+
+      saveResult(result);
+
+      // Show Result Overlay
+      document.getElementById('testOverlay').classList.remove('active');
+      document.getElementById('resultOverlay').style.display = 'block';
+      document.body.style.overflow = '';
+
+      const pct = Math.round((score / currentTest.questions.length) * 100);
+      document.getElementById('finalScore').textContent = pct + '%';
+      document.getElementById('finalMsg').textContent = pct >= 60
+        ? 'Congratulations! You passed. 🎉'
+        : 'Keep practicing. You can do better! 💪';
+    }
+
+    function closeResultOverlay() {
+      document.getElementById('resultOverlay').style.display = 'none';
+      renderDashboard();
+    }
+
+    // ===== LOGOUT =====
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('credoza_session');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+
+</html>
